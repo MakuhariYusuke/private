@@ -1,0 +1,59 @@
+---
+import Layout from '../layouts/Layout.astro';
+---
+
+<Layout>
+  <div class="inner">
+    <div class="card" style="max-width:720px;margin:12px auto">
+  <h1 id="contactTitle" role="heading" aria-level="1">お問合わせ</h1>
+      <p id="contactDesc">以下のフォームはモックです。実際の送信は行いませんが、入力チェックは動作します。</p>
+      <form id="contactForm" style="margin-top:12px;max-width:720px" novalidate aria-labelledby="contactTitle" aria-describedby="contactDesc">
+        <table class="form-table" role="presentation">
+          <tbody>
+            <tr>
+              <th><label for="company">会社名</label></th>
+              <td>
+                                <input id="company" name="company" type="text" maxlength="100" aria-describedby="error-company" />
+              </td>
+            </tr>
+            <tr>
+              <th><label for="name">お名前 <span class="req">※<span class="sr-only">必須</span></span></label></th>
+              <td>
+                <input id="name" name="name" type="text" required pattern=".{1,50}" maxlength="50" aria-describedby="error-name" />
+                <div id="error-name" class="error-text" aria-live="polite"></div>
+              </td>
+            </tr>
+            <tr>
+              <th><label for="email">メール <span class="req">※<span class="sr-only">必須</span></span></label></th>
+              <td>
+                <input id="email" name="email" type="email" required pattern="^[^\s@]+@[^\s@]+\.[^\s@]+$" aria-describedby="error-email" />
+                <div id="error-email" class="error-text" aria-live="polite"></div>
+              </td>
+            </tr>
+            <tr>
+              <th><label for="subject">件名 <span class="req">※</span></label></th>
+              <td>
+                <input id="subject" name="subject" type="text" required maxlength="150" aria-describedby="error-subject" aria-label="件名" />
+                <div id="error-subject" class="error-text" aria-live="polite"></div>
+              </td>
+            </tr>
+            <tr>
+              <th><label for="message">内容 <span class="req">※<span class="sr-only">必須</span></span></label></th>
+              <td>
+                <textarea id="message" name="message" rows="6" required maxlength="1000" aria-describedby="error-message"></textarea>
+                <div id="error-message" class="error-text" aria-live="polite"></div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+
+  <div id="formMessage" class="form-message" role="status" aria-live="polite" style="min-height:1.2em;margin-top:8px"></div>
+        <div style="margin-top:12px">
+          <button class="btn" id="submitBtn" type="submit">送信（モック）</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script type="module" src="/src/scripts/contact.ts"></script>
+</Layout>
