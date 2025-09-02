@@ -61,7 +61,9 @@ function attachContactForm() {
         const original = submitBtn.textContent;
         submitBtn.textContent = '送信中...';
         if (formMessage) { formMessage.style.color = 'black'; formMessage.textContent = '送信中...'; }
-        fetch('/api/contact', {
+  const apiBase = document.querySelector('meta[name="api-base"]')?.getAttribute('content') || '';
+  const endpoint = apiBase ? apiBase.replace(/\/$/, '') + '/api/contact' : '/api/contact';
+  fetch(endpoint, {
           method: 'POST',
           headers: { 'Content-Type':'application/json', 'x-api-key': metaKey },
           body: JSON.stringify({ subject, name, email, message })
