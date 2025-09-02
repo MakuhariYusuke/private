@@ -1,10 +1,9 @@
-name: Deploy to GitHub Pages
+name: Deploy to GitHub Pages (publish dist)
 
 on:
   push:
     branches: [ main, master ]
 
-# Allow the workflow the minimal permission to push built files
 permissions:
   contents: write
 
@@ -26,10 +25,13 @@ jobs:
       - name: Build
         run: npm run build
 
-      - name: Deploy to GitHub Pages
-        uses: JamesIves/github-pages-deploy-action@v4.4.0
+      - name: Add .nojekyll to dist
+        run: echo "" > dist/.nojekyll
+
+      - name: Deploy to gh-pages
+        uses: peaceiris/actions-gh-pages@v3
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          branch: gh-pages # The branch the action should deploy to.
-          folder: dist    # The folder the action should deploy.
-          clean: true
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./dist
+          publish_branch: gh-pages
+          allow_empty_commit: true
