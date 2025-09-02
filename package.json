@@ -5,10 +5,19 @@
   "scripts": {
     "dev": "astro dev",
     "build": "astro build",
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint --ext .ts,.js,.astro src server --report-unused-disable-directives --max-warnings 0",
     "preview": "astro preview",
     "astro": "astro"
   },
   "dependencies": {
     "astro": "^5.13.5"
+  }
+  ,
+  "devDependencies": {
+    "eslint": "^8.50.0",
+    "eslint-config-standard-with-typescript": "^34.1.0",
+    "@typescript-eslint/eslint-plugin": "^7.58.2",
+    "@typescript-eslint/parser": "^7.58.2"
   }
 }

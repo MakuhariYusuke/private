@@ -1,0 +1,8 @@
+node_modules
+dist
+.server
+.env
+
+# ignore build outputs from astro
+.astro
+public
