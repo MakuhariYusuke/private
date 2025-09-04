@@ -2,7 +2,7 @@
 import "../styles/global.css";
 ---
 <!--
-  This is the layout component for Chiba Kogyo Setsubi KK.
+  This is the layout component for Chiba Setsubi Kogyo KK.
   It wraps the main content and includes the header and footer.
  -->
 <!doctype html>
@@ -32,21 +32,24 @@ import "../styles/global.css";
 			<a href="#location">📍 所在地</a>
 			<a href="#contact">✉️ お問合わせ</a>
 			</nav>
+			<label class="theme-label" for="themeSelectRoot">色：</label>
 			<div class="theme-select" id="themeSelectRoot"></div>
+			<label class="font-label" for="fontSizeRoot">字：</label>
+			<div class="font-select" id="fontSizeRoot"></div>
 		</div>
 	</header>
 
 		<script type="module" src="/src/scripts/nav.js"></script>
 		<script type="module" src="/src/scripts/contact.ts"></script>
 		<script type="module" src="/src/scripts/form-submit.ts"></script>
-		<script type="module" src="/src/scripts/theme-toggle.ts"></script>
+		<script type="module" src={import.meta.env.BASE_URL + 'scripts/theme-toggle.js'}></script>
 
 	<main id="main" class="site-main" role="main">
 			<slot />
 		</main>
 
 	<footer class="site-footer" role="contentinfo">
-				<small>© {new Date().getFullYear()} Chiba Kogyo Setsubi KK</small>
+				<small>© {new Date().getFullYear()} Chiba Setsubi Kogyo KK</small>
 			</div>
 		</footer>
 	</body>

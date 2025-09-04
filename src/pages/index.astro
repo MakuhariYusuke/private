@@ -3,7 +3,7 @@
 import Layout from '../layouts/Layout.astro';
 ---
 <!--
-  This is the main page for Chiba Kogyo Setsubi KK.
+  This is the main page for Chiba Setsubi Kogyo KK.
   It includes sections for company overview, recruitment information, location, and a contact form.
   The contact form uses client-side validation and submits data to the server.
 -->
@@ -11,18 +11,12 @@ import Layout from '../layouts/Layout.astro';
 	<div class="inner">
 		<section class="hero card" id="home">
 			<div class="left">
-				<h1 role="heading" aria-level="1">千葉設備工業株式会社</h1>
-				<p>地域密着で確かな技術と信頼を提供する会社です。</p>
-					<p style="margin-top:12px">
-						<a class="btn" href="#contact">お問い合わせ</a>
-					</p>
-			</div>
-			<div class="right logo-wrap">
-					<div class="logo-inner" aria-hidden="false">
-						<img class="logo-light" src={import.meta.env.BASE_URL + 'assets/千葉設備工業株式会社＿黒ロゴ.svg'} alt="千葉設備工業株式会社 ロゴ（黒）" width="220" />
-						<img class="logo-dark" src={import.meta.env.BASE_URL + 'assets/千葉設備工業株式会社＿白ロゴ.svg'} alt="千葉設備工業株式会社 ロゴ（白）" width="220" />
-						<span class="logo-band" aria-hidden="true"></span>
-					</div>
+				<div class="hero-logo-wrap" aria-hidden="false">
+					<p class="hero-brand-msg">空調設備 設計 施工 保守整備</p><br><br>
+					<img class="hero-logo hero-logo-light" src={import.meta.env.BASE_URL + 'assets/千葉設備工業株式会社＿黒ロゴ.svg'} alt="千葉設備工業株式会社 ロゴ（黒）" width="440" />
+					<img class="hero-logo hero-logo-dark" src={import.meta.env.BASE_URL + 'assets/千葉設備工業株式会社＿白ロゴ.svg'} alt="千葉設備工業株式会社 ロゴ（白）" width="440" />
+				</div>
+                
 			</div>
 		</section>
 
@@ -60,7 +54,7 @@ import Layout from '../layouts/Layout.astro';
 				<h3 style="margin-top:12px" id="careersApply">応募方法</h3>
 				<p id="careersApplyDesc">お問合わせからご連絡ください。</p>
 				<div aria-describedby="careersApplyDesc">
-					<a class="cta" href="#contact">お問合わせへ</a>
+					<!-- contact CTA removed per request -->
 				</div>
 			</div>
 		</section>
