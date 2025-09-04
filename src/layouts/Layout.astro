@@ -16,25 +16,30 @@ import "../styles/global.css";
 		{typeof Astro !== 'undefined' && Astro.generator ? (
 			<meta name="generator" content={Astro.generator} />
 		) : null}
-		<title>千葉工業設備株式会社 - モックサイト</title>
+		<title>千葉設備工業株式会社 - モックサイト</title>
 	</head>
 	<body>
 		<a class="skip-link" href="#main">メインコンテンツへ移動</a>
 	<header class="site-header" role="banner">
 	  <div class="inner" style="display:flex;align-items:center;justify-content:space-between;gap:18px">
-		<a class="brand" href="#top">千葉工業設備株式会社</a>
-		<nav class="nav" id="mainNav" aria-label="主要ナビゲーション">
+			<a class="brand" href="#top">
+				<img class="brand-light" src={import.meta.env.BASE_URL + 'assets/千葉設備工業株式会社＿黒ロゴ.svg'} alt="千葉設備工業株式会社（黒）" style="height:30px;vertical-align:middle" />
+				<img class="brand-dark" src={import.meta.env.BASE_URL + 'assets/千葉設備工業株式会社＿白ロゴ.svg'} alt="千葉設備工業株式会社（白）" style="height:30px;vertical-align:middle;display:none" />
+			</a>
+			<nav class="nav" id="mainNav" aria-label="主要ナビゲーション">
 			<a href="#about">🏢 会社概要</a>
 			<a href="#careers">💼 採用情報</a>
 			<a href="#location">📍 所在地</a>
 			<a href="#contact">✉️ お問合わせ</a>
-		</nav>
-	</div>
+			</nav>
+			<div class="theme-select" id="themeSelectRoot"></div>
+		</div>
 	</header>
 
 		<script type="module" src="/src/scripts/nav.js"></script>
 		<script type="module" src="/src/scripts/contact.ts"></script>
 		<script type="module" src="/src/scripts/form-submit.ts"></script>
+		<script type="module" src="/src/scripts/theme-toggle.ts"></script>
 
 	<main id="main" class="site-main" role="main">
 			<slot />

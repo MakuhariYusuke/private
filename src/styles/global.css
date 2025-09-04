@@ -4,14 +4,97 @@
   --bg: #f6fbfc;
   --text: #072b3a;
   --muted: #5b6f7a;
+  --hero-text: var(--text);
   --container: 1180px;
 }
-html,body{margin:0;padding:0;font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Hiragino Kaku Gothic ProN', 'メイリオ', sans-serif;color:var(--text);background:var(--bg);}
-.hero, .hero.card { color: white }
+
+/* Theme overrides by data-theme attribute on html (auto/ light / dark / high-contrast) */
+html[data-theme="light"]{
+  --bg: #f6fbfc;
+  --text: #072b3a;
+  --muted: #5b6f7a;
+  --hero-text: #072b3a;
+  --hero-subtext: rgba(10,10,10,0.8);
+}
+html[data-theme="dark"]{
+  --bg: #071226;
+  --text: #e6eef6;
+  --muted: #9fb0c4;
+  --hero-text: #ffffff;
+  --hero-subtext: rgba(255,255,255,0.9);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root{
+    --bg: #071226;
+    --text: #e6eef6;
+    --muted: #9fb0c4;
+    --hero-text: #ffffff;
+    --hero-subtext: rgba(255,255,255,0.9);
+  }
+}
+html[data-theme="high-contrast"]{
+  /* Treat high-contrast selection as light mode per request */
+  /* Force strict black & white visuals */
+  --bg: #ffffff;
+  --text: #000000;
+  --muted: #000000;
+  --brand: #000000;
+  --brand-strong: #000000;
+  --hero-text: #000000;
+  --hero-subtext: #000000;
+}
+
+/* High-contrast: component overrides to ensure pure black/white rendering */
+html[data-theme="high-contrast"] .hero,
+html[data-theme="high-contrast"] .hero.card {
+  background: #ffffff !important;
+  color: #000000 !important;
+  box-shadow: none !important;
+  border: 2px solid #000000;
+}
+
+html[data-theme="high-contrast"] .card,
+html[data-theme="high-contrast"] .site-main,
+html[data-theme="high-contrast"] .site-footer {
+  background: #ffffff !important;
+  color: #000000 !important;
+  box-shadow: none !important;
+  border: 2px solid #000000;
+}
+
+html[data-theme="high-contrast"] .form-table input[type="text"],
+html[data-theme="high-contrast"] .form-table input[type="email"],
+html[data-theme="high-contrast"] .form-table textarea,
+html[data-theme="high-contrast"] select {
+  background: #ffffff !important;
+  color: #000000 !important;
+  border: 2px solid #000000 !important;
+}
+
+html[data-theme="high-contrast"] .btn,
+html[data-theme="high-contrast"] .cta {
+  background: #000000 !important;
+  color: #ffffff !important;
+  border: 2px solid #000000 !important;
+}
+
+/* Ensure brand shows as black logo (on white) in high-contrast */
+html[data-theme="high-contrast"] .brand-light{display:inline-block}
+html[data-theme="high-contrast"] .brand-dark{display:none}
+
+.html,body{margin:0;padding:0;font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Hiragino Kaku Gothic ProN', 'メイリオ', sans-serif;color:var(--text);background:var(--bg);}
+.hero, .hero.card { color: var(--hero-text) }
 .hero { background: linear-gradient(180deg, var(--brand), var(--brand-strong)); padding:36px; }
+/* When hero is also given the 'card' class, keep the hero background and ensure text remains readable */
+.hero.card { background: linear-gradient(180deg, var(--brand), var(--brand-strong)); box-shadow:none; color:var(--hero-text); padding:36px; border-radius:12px; }
 .inner{max-width:var(--container);margin:0 auto;padding:28px 20px}
 .site-header{background:linear-gradient(90deg, #eaf8fc, white);border-bottom:1px solid rgba(11,127,166,0.06);padding:8px 0;position:sticky;top:0;z-index:40}
 .brand{font-weight:700;color:var(--brand-strong);text-decoration:none;font-size:1.1rem}
+
+/* Theme selector in header */
+.theme-select{margin-left:12px}
+.theme-select select{padding:6px;border-radius:6px;border:1px solid #d1e8f2}
 .nav{display:inline-block;margin-left:18px}
 .nav a{margin-left:10px;color:var(--muted);text-decoration:none;padding:8px;border-radius:6px;font-size:0.98rem}
 /* .nav a:hover{background:rgba(91,192,235,0.12);color:var(--brand)} */
@@ -30,8 +113,19 @@ html,body{margin:0;padding:0;font-family: -apple-system, BlinkMacSystemFont, 'Se
 .hero{display:flex;gap:24px;align-items:center}
 .hero .left{flex:1}
 .hero h1{margin:0 0 8px;font-size:34px}
-.hero p{margin:0;color:rgba(255,255,255,0.9)}
+.hero p{margin:0;color:var(--hero-subtext)}
 .logo-dark{display:none}
+/* Logo wrapper and colored band */
+.logo-wrap{display:flex;align-items:center}
+.logo-inner{position:relative;display:inline-flex;align-items:center}
+.logo-inner img{display:block;height:auto}
+.logo-band{display:inline-block;width:14px;height:38px;margin-left:8px;border-radius:4px;background:#0f6cffff}
+
+.brand img{display:inline-block}
+.brand-light{display:inline-block}
+.brand-dark{display:none}
+
+.theme-select select{background:transparent}
 .btn{display:inline-block;background:var(--brand);color:white;padding:10px 14px;border-radius:8px;text-decoration:none}
 .hero .btn{background:white;color:var(--brand-strong);padding:10px 16px;border-radius:8px}
 .site-footer{border-top:1px solid rgba(0,0,0,0.04);background:white}
@@ -96,10 +190,22 @@ html,body,.card,input,textarea,a,button{transition:background-color .18s,color .
   html,body{background:var(--bg);color:var(--text)}
   .site-header{background:linear-gradient(90deg,#06202b,#071226);border-bottom-color:rgba(255,255,255,0.04)}
   .site-footer{background:#071226;border-top-color:rgba(255,255,255,0.04);color:var(--muted)}
-  .card{background:#071828;box-shadow:0 8px 24px rgba(0,0,0,0.6)}
+  .card{background:#071828;box-shadow:0 8px 24px rgba(0,0,0,0.6); color:var(--text)}
+  /* Ensure table labels and details inside cards are clearly visible */
+  .card th, .card td, .card p, .card h1, .card h2, .card h3, .card a { color: var(--text) }
+  /* give cards and main area a slightly lighter surface to improve text legibility in dark mode */
+  .card, .site-main, .site-footer { background: linear-gradient(180deg, rgba(10,26,36,0.95), rgba(8,16,26,0.95)); }
   .brand{color:var(--brand)}
-  .logo-light{display:none}
-  .logo-dark{display:inline-block}
+  /* header brand image: show dark variant when dark */
+  .brand-light{display:inline-block}
+  .brand-dark{display:none}
+}
+
+/* when explicit theme=dark is set on html also apply dark images */
+html[data-theme="dark"] .brand-light{display:none}
+html[data-theme="dark"] .brand-dark{display:inline-block}
+
+html[data-theme="dark"] {
   .nav a{color:var(--muted)}
   .nav a:hover{background:rgba(79,208,255,0.08);color:var(--brand)}
   .nav a.active{background:rgba(79,208,255,0.08); color:var(--brand-strong); font-weight:700}
@@ -114,6 +220,19 @@ html,body,.card,input,textarea,a,button{transition:background-color .18s,color .
   .service .icon{ background: rgba(255,255,255,0.04); color:var(--brand) }
   .skip-link{background:#ffffff10;color:var(--text)}
   a:focus-visible,button:focus-visible,input:focus-visible,textarea:focus-visible{outline-color:rgba(79,208,255,0.95)}
+}
+
+@media (prefers-color-scheme: dark) {
+  .brand-light{display:none}
+  .brand-dark{display:inline-block}
+}
+
+/* Dark and light explicit overrides for the logo band */
+@media (prefers-color-scheme: dark) {
+  .logo-band{background:#b1d9ffff}
+}
+@media (prefers-color-scheme: light) {
+  .logo-band{background:#0f6cffff}
 }
 
 #preview-modal-root > div { padding: 18px; }
