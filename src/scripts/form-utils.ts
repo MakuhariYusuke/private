@@ -112,6 +112,7 @@ export function clearErrors(errors: Record<string, HTMLElement | null>, formMess
 /**
  * Create a small status controller for a form message element.
  * Returns functions to set status text and optionally auto-clear it.
+ * @param {HTMLElement | null} formMessage - The form message element
  */
 export function createStatusController(formMessage: HTMLElement | null) {
   let timeoutId: number | undefined;
@@ -137,6 +138,8 @@ export function createStatusController(formMessage: HTMLElement | null) {
 
 /**
  * Validate contact form fields and return structured info.
+ * @param {Object} values - The form field values
+ * @returns {Object} - The validation result
  */
 export function validateContactFields(values: { subject?: string; name?: string; email?: string; message?: string }) {
   const missing: string[] = [];
