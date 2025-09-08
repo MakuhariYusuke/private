@@ -1,11 +1,11 @@
-import { test, expect } from '@playwright/test';
+import { test, expect, type Page } from '@playwright/test';
 import fs from 'fs';
 import path from 'path';
 
 const outDir = path.join(process.cwd(), 'test-results', 'screenshots');
 if (!fs.existsSync(outDir)) fs.mkdirSync(outDir, { recursive: true });
 
-async function setTheme(page, theme) {
+async function setTheme(page: Page, theme: string) {
   // theme: 'auto' | 'light' | 'dark' | 'high-contrast'
   await page.evaluate((t) => {
     if (t === 'auto') document.documentElement.removeAttribute('data-theme');
@@ -15,11 +15,11 @@ async function setTheme(page, theme) {
   }, theme);
 }
 
-async function setFont(page, size) {
+async function setFont(page: { evaluate: (arg0: (s: any) => void, arg1: any) => any; }, size: any) {
   await page.evaluate((s) => document.documentElement.setAttribute('data-font-size', s), size);
 }
 
-async function snapshot(page, name) {
+async function snapshot(page: Page, name: string) {
   // wait for header (try several common selectors) and a card to appear and be visible
   const headerSelectors = ['.site-header', 'header[role="banner"]', 'nav#mainNav'];
   let headerLocator = null;

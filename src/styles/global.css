@@ -23,6 +23,9 @@
   --card-shadow: 0 10px 30px rgba(12,16,30,0.06);
   --card-border: none;
   --inner-horizontal-padding: 20px;
+  /* status colors */
+  --error: #b91c1c; /* default red for light mode */
+  --success: #16a34a;
 }
 
 /* Theme overrides by data-theme attribute on html (auto/ light / dark / high-contrast) */
@@ -84,6 +87,8 @@ html[data-theme="dark"]{
   --header-inner-bg: rgba(0,0,0,0.03);
   --header-inner-padding: 12px;
   --header-inner-radius: 6px;
+  /* dark theme tweaks */
+  --error: #ff3333; /* brighter red for contrast on dark backgrounds */
 }
 
 @media (prefers-color-scheme: dark) {
@@ -153,11 +158,11 @@ html[data-theme="high-contrast"] .brand-light{display:inline-block}
 html[data-theme="high-contrast"] .brand-dark{display:none}
 
 html,body{margin:0;padding:0;font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Hiragino Kaku Gothic ProN', 'メイリオ', sans-serif;color:var(--text);background:var(--bg);}
-/* sensible fallback for header height used in hero calc; JS may update --header-height at runtime but CSS will enforce a fixed header box */
+/* sensible fallback for header height used in hero calc; JS updates --header-height at runtime but CSS should NOT force a fixed header height */
 :root{ --header-height: 64px; }
-/* Fixed header box: keep height consistent across themes. Padding is included via box-sizing on .inner so visual padding doesn't affect measured height. */
-.site-header{height:var(--header-height);box-sizing:border-box}
-.site-header .inner{height:100%;box-sizing:border-box;display:flex;align-items:center;justify-content:space-between;flex-wrap:nowrap;gap:12px;padding:var(--header-inner-padding);border-radius:var(--header-inner-radius);background:var(--header-inner-bg)}
+/* Header sizing: allow header to size based on content; JS may set --header-height for other calculations but CSS won't clip content */
+.site-header{box-sizing:border-box}
+.site-header .inner{box-sizing:border-box;display:flex;align-items:center;justify-content:space-between;flex-wrap:nowrap;gap:12px;padding:var(--header-inner-padding);border-radius:var(--header-inner-radius);background:var(--header-inner-bg)}
 .hero, .hero.card { color: var(--hero-text) }
 .hero { background: var(--hero-bg, linear-gradient(180deg, var(--brand), var(--brand-strong))); padding:28px; min-height:calc(100vh - var(--header-height)) !important; display:flex;align-items:center }
 /* When hero is also given the 'card' class, keep the hero background and ensure text remains readable */
@@ -174,7 +179,59 @@ html,body{margin:0;padding:0;font-family: -apple-system, BlinkMacSystemFont, 'Se
 .theme-label{font-size:0.95rem;color:var(--muted);margin-right:6px}
 .font-label{font-size:0.95rem;color:var(--muted);margin-left:6px;margin-right:6px}
 .nav{display:flex;align-items:center;margin-left:12px;gap:8px}
-.nav a{margin-left:0;color:var(--muted);text-decoration:none;padding:0.45em 0.6em;border-radius:8px;font-size:0.98rem;display:inline-flex;align-items:center;justify-content:center;line-height:1}
+.nav a{margin-left:0;color:var(--muted);text-decoration:none;padding:0.45em 0.6em;border-radius:8px;font-size:0.98rem;display:inline-flex;align-items:center;justify-content:center;line-height:1;white-space:nowrap}
+
+/* Responsive header/nav adjustments for narrow viewports and large font settings */
+/* Medium screens: 481px — 920px: prefer a single-row flow with wrapping when necessary */
+@media (min-width: 481px) and (max-width: 920px) {
+  .site-header{height:auto}
+  .site-header .inner{display:flex;flex-direction:row;flex-wrap:wrap;align-items:center;gap:8px;padding:10px}
+  .brand{flex:0 0 auto}
+
+  .nav{order:1;display:flex;flex-wrap:wrap;gap:8px;flex:1 1 auto;justify-content:center;margin:0}
+  .nav a{padding:0.35em 0.5em;font-size:0.95rem}
+
+  /* control pair: label + select stay together as one unit */
+  .control-pair { display:inline-flex; align-items:center; gap:8px; order:2; white-space:nowrap; flex:0 0 auto }
+  .control-pair .theme-label, .control-pair .theme-select, .control-pair .font-label, .control-pair .font-select { display:inline-flex; align-items:center; gap:8px }
+
+  /* allow selects to shrink rather than pushing layout off-screen */
+  .theme-select select, .font-select select, .font-size-control { max-width: 180px; width: auto }
+  .nav { -webkit-overflow-scrolling: touch; overflow-x: auto }
+}
+
+/* Small screens: <= 480px stack vertically to maximize readability */
+@media (max-width: 480px) {
+  .site-header{height:auto}
+  .site-header .inner{display:flex;flex-direction:column;align-items:stretch;gap:8px;padding:10px}
+  .brand{align-self:flex-start}
+
+  .nav{order:1;display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin:0}
+  .nav a{padding:0.35em 0.5em;font-size:0.96rem}
+
+  .theme-label, .font-label { display:inline-flex; align-items:center; gap:8px; order:2; align-self:flex-end; white-space:nowrap }
+  .theme-select, .font-select { display:inline-flex; align-items:center; gap:8px; order:2; align-self:flex-end; white-space:nowrap }
+
+  .nav { -webkit-overflow-scrolling: touch; overflow-x: auto }
+}
+
+/* When very narrow, prefer compact paddings and ensure nav items can shrink/wrap */
+@media (max-width: 520px) {
+  .site-header .inner{padding:8px}
+  .nav a{padding:0.3em 0.45em;font-size:0.9rem}
+}
+
+/* If user selects very large font sizes, allow header to grow instead of overflowing */
+html[data-font-size="large"], html[data-font-size="xlarge"] {
+  .site-header { height: auto }
+  .site-header .inner { flex-wrap: wrap }
+  .nav { flex-wrap: wrap; overflow: visible }
+}
+
+/* Fallback: if wrapping still causes overflow, allow horizontal scrolling on nav */
+@media (max-width: 920px) {
+  .nav { -webkit-overflow-scrolling: touch; overflow-x: auto }
+}
 
 /* make nav items visibly tappable; subtle background per theme */
 html[data-theme="light"] .nav a{background:rgba(0,0,0,0.02)}
@@ -217,12 +274,6 @@ html[data-theme="dark"] .brand:hover, html[data-theme="dark"] .brand:focus{backg
 /* Hero logo sizing and visibility */
 .hero-logo-wrap{display:flex;align-items:center;gap:18px;justify-content:center;flex-direction:column}
 .hero-brand-msg{width:100%;text-align:center;font-weight:700;margin-bottom:12px;color:var(--muted);display:block}
-
-/* Ensure brand message uses hero text color in auto (OS dark) and explicit dark modes */
-html:not([data-theme]) .hero-brand-msg,
-html[data-theme="dark"] .hero-brand-msg {
-  color: var(--hero-text) !important;
-}
 .hero-brand-msg{font-size:2.25rem}
 .hero-logo{height:auto;display:block;max-width:640px;margin-top:6px;margin-left:auto;margin-right:auto}
 /* enforce stacking: brand message then logos */
@@ -234,6 +285,14 @@ html[data-theme="dark"] .hero-brand-msg {
 /* responsive hero logo */
 @media(max-width:720px){
   .hero-logo{max-width:90%;height:auto}
+}
+
+/* Keep brand message size fixed to the 'standard' UI font size (normal = 16px base):
+   2.25rem @ 16px = 36px. Use px to avoid rem changes when html[data-font-size] is toggled. */
+.hero-brand-msg { font-size: clamp(18px, 5.5vw, 36px) !important; line-height: 1.05 !important; white-space: nowrap; }
+@media (max-width: 420px) {
+  /* very small devices: allow slightly smaller minimum to help fit very narrow screens */
+  .hero-brand-msg { font-size: clamp(16px, 6.5vw, 36px) !important }
 }
 
 /* Swap hero background: light theme uses dark-looking hero, dark theme uses light-looking hero (per request) */
@@ -254,7 +313,7 @@ html[data-theme="dark"] .hero{background:linear-gradient(180deg, var(--brand), v
   /* ensure auto uses the exact same brand colors as explicit light */
   html:not([data-theme]) { --brand: #6fd6f6; --brand-strong: #0b9fc1; }
   html:not([data-theme]) .hero{ background: linear-gradient(180deg,#6fd6f6,#0b9fc1) !important; }
-  html:not([data-theme]) .theme-select select, html:not([data-theme]) .font-size-control{ background:white;color:var(--text);border-color:#d1e8f2 }
+  html:not([data-theme]) .theme-select select, html:not([data-theme]) .font-size-control{ background:transparent;color:var(--text);border-color:#d1e8f2 }
   /* header for auto + OS light */
   html:not([data-theme]) { --header-bg: transparent; --header-border: 1px solid rgba(11,127,166,0.06); --header-inner-bg: linear-gradient(90deg,#eaf8fc,white); --header-inner-padding:12px; --header-inner-radius:6px }
   /* nav items for auto + OS light */
@@ -266,7 +325,7 @@ html[data-theme="dark"] .hero{background:linear-gradient(180deg, var(--brand), v
 html:not([data-theme]) .theme-select select,
 html:not([data-theme]) .font-size-control{
   /* follow prefers-color-scheme via media queries */
-  background: white; color: var(--text); border-color: #d1e8f2;
+  background: transparent; color: var(--text); border-color: #d1e8f2;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -288,7 +347,7 @@ html[data-font-size="xlarge"]{font-size:32px}
 .brand-light{display:inline-block}
 .brand-dark{display:none}
 
-.theme-select select, .font-size-control{padding:0.45em 0.6em;border-radius:6px;border:1px solid #d1e8f2;background:white;font-size:inherit}
+.theme-select select, .font-size-control{padding:0.45em 0.6em;border-radius:6px;border:1px solid #d1e8f2;background:transparent;font-size:inherit}
 .theme-select select{background:transparent}
 
 /* dark-mode selects */
@@ -307,8 +366,8 @@ html[data-theme="dark"] .font-size-control{
 .form-table td{padding:10px 12px}
 .form-table input[type="text"],.form-table input[type="email"],.form-table textarea{width:100%;padding:10px;border:1px solid #d1e8f2;border-radius:6px;font-size:0.95rem}
 .form-table textarea{min-height:120px;max-height:480px;resize:vertical;overflow:auto}
-.error-text{color:#b91c1c;font-size:0.9rem;margin-top:6px;min-height:1.1em}
-.req{color:#b91c1c;margin-left:4px}
+.error-text{color:var(--error);font-size:0.9rem;margin-top:6px;min-height:1.1em}
+.req{color:var(--error);margin-left:4px}
 .form-message{font-size:0.95rem}
 .btn[disabled]{opacity:0.6;cursor:not-allowed}
 
@@ -561,10 +620,10 @@ html[data-theme="dark"] .hero-logo-light{display:none}
 
 /* Dark and light explicit overrides for the logo band */
 @media (prefers-color-scheme: dark) {
-  .logo-band{background:#b1d9ffff}
+  .logo-band{background:#b1d9ff}
 }
 @media (prefers-color-scheme: light) {
-  .logo-band{background:#0f6cffff}
+  .logo-band{background:#0f6cff}
 }
 
 #preview-modal-root > div { padding: 18px; }

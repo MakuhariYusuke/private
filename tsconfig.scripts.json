@@ -3,6 +3,8 @@
   "compilerOptions": {
     "outDir": "./public/scripts",
     "rootDir": "./src/scripts",
+  "noEmit": false,
+  "allowImportingTsExtensions": false,
     "declaration": false,
     "module": "esnext",
     "target": "es2020",

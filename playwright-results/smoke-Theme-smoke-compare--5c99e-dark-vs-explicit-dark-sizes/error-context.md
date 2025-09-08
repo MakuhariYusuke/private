@@ -1,0 +1,83 @@
+# Page snapshot
+
+```yaml
+- generic [active] [ref=e1]:
+  - main [ref=e2]:
+    - generic [ref=e3]:
+      - generic [ref=e6]:
+        - heading "空調設備 設計 施工 保守整備" [level=1] [ref=e7]
+        - img "千葉設備工業株式会社 ロゴ（黒）" [ref=e8]
+      - generic [ref=e10]:
+        - heading "会社概要" [level=2] [ref=e11]
+        - text: 会社名 千葉設備工業株式会社 事業内容 空調機の保守及び補修、補修作業、設置現場での保守点検作業 設立 1968年 資本金 1000万円 代表者 代表取締役 太田哲司 従業員数 11人 事業所 千葉県千葉市中央区南町三丁目9番4号 業種 不動産・建設・設備
+        - heading "代表メッセージ" [level=3] [ref=e12]
+        - paragraph [ref=e13]: 地域のお客様のために誠実に仕事を行います。まずはこのモックをご確認ください。
+      - generic [ref=e15]:
+        - heading "採用情報" [level=2] [ref=e16]
+        - paragraph [ref=e17]: "現在募集中の職種:"
+        - list [ref=e18]:
+          - listitem [ref=e19]: 現場作業員（未経験可）
+          - listitem [ref=e20]: 現場監督（経験者優遇）
+        - heading "待遇" [level=3] [ref=e21]
+        - paragraph [ref=e22]: 社会保険、通勤手当、昇給あり（詳細は面談にて）
+        - heading "応募方法" [level=3] [ref=e23]
+        - paragraph [ref=e24]: お問合わせからご連絡ください。
+      - generic [ref=e26]:
+        - heading "所在地" [level=2] [ref=e27]
+        - paragraph [ref=e28]: 〒262-0842 千葉県千葉市中央区南町三丁目9番4号
+        - heading "アクセス" [level=3] [ref=e29]
+        - paragraph [ref=e30]: JR蘇我駅 東口から徒歩約6分（駅を出て直進、交差点を渡って右手）
+        - heading "地図" [level=3] [ref=e31]
+        - generic "地図" [ref=e32]:
+          - link "地図（クリックで外部マップを開きます）" [ref=e33] [cursor=pointer]:
+            - /url: https://www.google.com/maps/search/?api=1&query=千葉県千葉市中央区南町３丁目９－４
+            - img "地図（クリックで外部マップを開きます）" [ref=e34] [cursor=pointer]
+          - paragraph [ref=e35]: "地図画像はプレースホルダーです。実際の地図画像は `public/placeholder-map.png` に差し替えてください。"
+      - generic [ref=e37]:
+        - heading "お問合わせ" [level=2] [ref=e38]
+        - paragraph [ref=e39]: 以下のフォームからお問い合わせください。実運用時は SMTP 設定を.env に入れてください。
+        - form "お問合わせ" [ref=e40]:
+          - generic [ref=e41]: 会社名
+          - textbox "会社名" [ref=e42]
+          - generic [ref=e43]:
+            - text: お名前
+            - generic [ref=e44]:
+              - text: ※
+              - generic [ref=e45]: 必須
+          - textbox "お名前 ※ 必須" [ref=e46]
+          - generic [ref=e47]:
+            - text: メール
+            - generic [ref=e48]:
+              - text: ※
+              - generic [ref=e49]: 必須
+          - textbox "メール ※ 必須" [ref=e50]
+          - generic [ref=e51]:
+            - text: 件名
+            - generic [ref=e52]: ※
+          - textbox "件名" [ref=e53]
+          - generic [ref=e54]:
+            - text: 内容
+            - generic [ref=e55]:
+              - text: ※
+              - generic [ref=e56]: 必須
+          - textbox "内容 ※ 必須" [ref=e57]
+          - status [ref=e58]
+          - button "送信" [ref=e60]
+  - contentinfo [ref=e61]:
+    - generic [ref=e62]: © 2025 Chiba Setsubi Kogyo KK
+  - generic [ref=e65]:
+    - button "Menu" [ref=e66]:
+      - img [ref=e68]
+      - generic: Menu
+    - button "Inspect" [ref=e72]:
+      - img [ref=e74]
+      - generic: Inspect
+    - button "Audit" [ref=e76]:
+      - generic [ref=e77]:
+        - img [ref=e78]
+        - img [ref=e81]
+      - generic: Audit
+    - button "Settings" [ref=e84]:
+      - img [ref=e86]
+      - generic: Settings
+```
