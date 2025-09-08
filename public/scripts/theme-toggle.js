@@ -8,8 +8,9 @@
   const mountId = 'themeSelectRoot';
 
   let cachedTheme = null;
+  let cachedFont = null;
   const getStoredTheme = () => cachedTheme !== null ? cachedTheme : (cachedTheme = localStorage.getItem(THEME_KEY) || 'auto');
-  const getStoredFont = () => localStorage.getItem(FONT_KEY) || 'normal';
+  const getStoredFont = () => cachedFont !== null ? cachedFont : (cachedFont = localStorage.getItem(FONT_KEY) || 'normal');
 
   function logos() {
     return {
@@ -30,6 +31,8 @@
   }
 
   function applyTheme(theme) {
+  // update cachedTheme so observers and other callers stay in sync
+  cachedTheme = theme;
     // Only change the attribute when the requested theme differs from current
     const current = root.getAttribute('data-theme') || 'auto';
     if (theme === 'auto') {
@@ -46,8 +49,11 @@
   }
 
   function applyFontSize(size) {
-    root.setAttribute('data-font-size', size);
-    requestAnimationFrame(setHeaderHeight);
+  // persist and cache font size and adjust header after applying
+  try { localStorage.setItem(FONT_KEY, size); } catch (_) {}
+  cachedFont = size;
+  root.setAttribute('data-font-size', size);
+  requestAnimationFrame(setHeaderHeight);
   }
 
   function getHeaderElement() { return document.querySelector('.site-header'); }
@@ -108,6 +114,8 @@
         const o = document.createElement('option'); o.value = v; o.textContent = label; fontSelect.appendChild(o);
       });
       fontSelect.id = 'fontSizeSelect';
+  // ensure CSS selectors targeting .font-size-control apply
+  fontSelect.className = 'font-size-control';
       fontSelect.value = getStoredFont();
       fontSelect.addEventListener('change', () => { localStorage.setItem(FONT_KEY, fontSelect.value); applyFontSize(fontSelect.value); });
       fontRoot.appendChild(fontSelect);
