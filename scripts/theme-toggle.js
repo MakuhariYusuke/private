@@ -30,8 +30,13 @@
   }
 
   function applyTheme(theme) {
-    if (theme === 'auto') root.removeAttribute('data-theme');
-    else root.setAttribute('data-theme', theme);
+    // Only change the attribute when the requested theme differs from current
+    const current = root.getAttribute('data-theme') || 'auto';
+    if (theme === 'auto') {
+      if (current !== 'auto') root.removeAttribute('data-theme');
+    } else {
+      if (current !== theme) root.setAttribute('data-theme', theme);
+    }
     toggleLogos(theme);
     requestAnimationFrame(() => {
       if (theme === 'dark' && window.__headerBaseline) root.style.setProperty('--header-height', window.__headerBaseline + 'px');
@@ -123,7 +128,13 @@
       try {
         const mo = new MutationObserver((mutations) => {
           for (const m of mutations) {
-            if (m.type === 'attributes' && m.attributeName === 'data-theme') applyTheme(getStoredTheme());
+            if (m.type === 'attributes' && m.attributeName === 'data-theme') {
+              // read new value and avoid re-applying the same theme (prevents infinite loop)
+              const newVal = root.getAttribute('data-theme') || 'auto';
+              if (newVal === cachedTheme) continue;
+              cachedTheme = newVal;
+              applyTheme(newVal);
+            }
           }
         });
         mo.observe(root, { attributes: true, attributeFilter: ['data-theme'] });
@@ -139,17 +150,3 @@
     else if (mq.addListener) mq.addListener(handler);
   }
 })();
-
-
-/**
- * Utility function for matchMedia event registration.
- * @param {MediaQueryList} mq - The media query list object (from window.matchMedia).
- * @param {Function} handler - The callback function to execute on media query change.
- * Example:
- *   const mq = window.matchMedia('(prefers-color-scheme: dark)');
- *   addMediaQueryListener(mq, () => { /* handle theme change * / });
- */
-function addMediaQueryListener(mq, handler) {
-  if (mq.addEventListener) mq.addEventListener('change', handler);
-  else if (mq.addListener) mq.addListener(handler);
-}
