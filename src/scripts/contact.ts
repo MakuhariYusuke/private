@@ -9,6 +9,7 @@
  */
 import { postContact, type ContactPayload, clearErrors as clearFormErrors, getApiKey, getApiBase, createStatusController, validateContactFields } from './form-utils';
 
+// Expected shape of the API response
 type ContactResult = {
   previewUrl?: string;
   // 他に必要なプロパティがあればここに追加
@@ -62,6 +63,12 @@ export function attachContactForm() {
   // Use shared status controller for this form
   const status = createStatusController(formMessage);
 
+  /**
+   * Set the busy state of the submit button
+   * @param busy Whether to set the button to busy state
+   * @param label The label to display on the button
+   * @returns
+   */
   const setBusy = (busy: boolean, label?: string) => {
     if (!submitBtn) return;
     submitBtn.disabled = busy;
@@ -99,6 +106,17 @@ export function attachContactForm() {
       return;
     }
 
+    /**
+     * Type guard for ContactResult 
+     * @returns {boolean} Whether the object is a ContactResult
+     */
+    function isContactResponseValid(obj: any): obj is ContactResult {
+      return typeof obj === 'object' && (
+        obj.previewUrl === undefined ||
+        typeof obj.previewUrl === 'string'
+      );
+    }
+
     // real flow using shared postContact
     try {
       if (!apiKey) throw new Error('APIキーが見つかりません。');
@@ -108,15 +126,8 @@ export function attachContactForm() {
 
       const apiResponse = await postContact(payload, { apiKey, apiBase: getApiBase() });
 
-      // Type guard for ContactResult
-      function isContactResult(obj: any): obj is ContactResult {
-        return typeof obj === 'object' && (
-          obj.previewUrl === undefined ||
-          typeof obj.previewUrl === 'string'
-        );
-      }
 
-      if (!isContactResult(apiResponse)) {
+  if (!isContactResponseValid(apiResponse)) {
         status.setStatus('APIレスポンスの形式が正しくありません。', 'var(--error)');
         return;
       }
@@ -124,20 +135,20 @@ export function attachContactForm() {
       const result: ContactResult = apiResponse;
 
   if (result?.previewUrl && formMessage) {
-        // Remove any existing preview links
-        const existingLinks = formMessage.querySelectorAll('.preview-link-spacer, a[target="_blank"]');
-        existingLinks.forEach(el => el.remove());
+    // Remove any existing preview links
+    const existingLinks = formMessage.querySelectorAll('.preview-link-spacer, a[target="_blank"]');
+    existingLinks.forEach(el => el.remove());
 
-        const a = document.createElement('a');
-        a.href = result.previewUrl;
-        a.target = '_blank';
-        a.rel = 'noopener noreferrer';
-        a.textContent = '送信プレビューを開く';
-        const spacer = document.createElement('span');
-        spacer.className = 'preview-link-spacer';
-        formMessage.appendChild(spacer);
-        formMessage.appendChild(a);
-      }
+    const a = document.createElement('a');
+    a.href = result.previewUrl;
+    a.target = '_blank';
+    a.rel = 'noopener noreferrer';
+    a.textContent = '送信プレビューを開く';
+    const spacer = document.createElement('span');
+    spacer.className = 'preview-link-spacer';
+    formMessage.appendChild(spacer);
+    formMessage.appendChild(a);
+  }
 
     } catch (err) {
       console.error(err);
