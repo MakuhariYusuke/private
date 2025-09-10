@@ -10,17 +10,16 @@ export { postContact };
 /**
  * Auto-attach for careers form
  */
-export function attachCareersForm() {
-  const form = document.getElementById('careersForm') as HTMLFormElement | null;
+export function attachCareersForm(form: HTMLFormElement) {
   if (!form) return;
-  const submitBtn = document.getElementById('submitCareersBtn') as HTMLButtonElement | null;
-  const formMessage = document.getElementById('formMessage-careers') as HTMLElement | null;
+  const submitBtn = form.querySelector('#submitCareersBtn') as HTMLButtonElement | null;
+  const formMessage = form.querySelector('#formMessage-careers') as HTMLElement | null;
   const CAREERS_BTN_TEXT = '応募する（モック）';
   const errors = {
-    subject: document.getElementById('error-subject') as HTMLElement | null,
-    name: document.getElementById('error-name') as HTMLElement | null,
-    email: document.getElementById('error-email') as HTMLElement | null,
-    message: document.getElementById('error-message') as HTMLElement | null,
+    subject: form.querySelector('#error-subject') as HTMLElement | null,
+    name: form.querySelector('#error-name') as HTMLElement | null,
+    email: form.querySelector('#error-email') as HTMLElement | null,
+    message: form.querySelector('#error-message') as HTMLElement | null,
   };
 
   // 応募ボタンの busy 状態を切り替えます
@@ -29,7 +28,7 @@ export function attachCareersForm() {
     submitBtn.disabled = busy;
     if (busy) {
       submitBtn.setAttribute('aria-busy', 'true');
-      submitBtn.textContent = CAREERS_BTN_TEXT;
+      submitBtn.textContent = '送信中...';
     } else {
       submitBtn.removeAttribute('aria-busy');
       submitBtn.textContent = CAREERS_BTN_TEXT;
@@ -50,11 +49,11 @@ export function attachCareersForm() {
     clearErrors(errors, formMessage);
 
     // Read values directly to avoid FormData constructor issues in test envs
-    const company = (document.getElementById('company') as HTMLInputElement | null)?.value.trim() || '';
-    const subject = (document.getElementById('subject') as HTMLInputElement | null)?.value.trim() || '';
-    const name = (document.getElementById('name') as HTMLInputElement | null)?.value.trim() || '';
-    const email = (document.getElementById('email') as HTMLInputElement | null)?.value.trim() || '';
-    const message = (document.getElementById('message') as HTMLTextAreaElement | null)?.value.trim() || '';
+    const company = (form.elements.namedItem('company') as HTMLInputElement | null)?.value.trim() || '';
+    const subject = (form.elements.namedItem('subject') as HTMLInputElement | null)?.value.trim() || '';
+    const name = (form.elements.namedItem('name') as HTMLInputElement | null)?.value.trim() || '';
+    const email = (form.elements.namedItem('email') as HTMLInputElement | null)?.value.trim() || '';
+    const message = (form.elements.namedItem('message') as HTMLTextAreaElement | null)?.value.trim() || '';
 
     // Validation using shared helper
     const { missing, emailInvalid, combined, firstInvalid } = validateContactFields({ subject, name, email, message });
@@ -121,12 +120,13 @@ if (typeof window !== 'undefined') {
       console.warn('No careers forms found to attach.');
     }
     forms.forEach(form => {
-      // Temporarily set the expected id for compatibility
-      (form as HTMLFormElement).id = 'careersForm';
-      attachCareersForm();
-      // Optionally restore the original id if needed
+      attachCareersForm(form as HTMLFormElement);
     });
   });
 }
 
 // preview modal functionality now provided by shared showPreviewModal in form-utils
+// Example usage:
+// import { showPreviewModal } from './form-utils';
+// showPreviewModal('<div>Preview HTML content here</div>');
+// This will display the provided HTML content in a modal dialog.

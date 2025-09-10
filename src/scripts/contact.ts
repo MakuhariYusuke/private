@@ -126,8 +126,7 @@ export function attachContactForm() {
 
       const apiResponse = await postContact(payload, { apiKey, apiBase: getApiBase() });
 
-
-  if (!isContactResponseValid(apiResponse)) {
+      if (!isContactResponseValid(apiResponse)) {
         status.setStatus('APIレスポンスの形式が正しくありません。', 'var(--error)');
         return;
       }

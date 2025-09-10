@@ -138,14 +138,14 @@ export function createStatusController(formMessage: HTMLElement | null) {
 
 /**
  * Validate contact form fields and return structured info.
- * @param {Object} values - The form field values
- * @returns {Object} - The validation result
+ * @param values - The form field values
+ * @returns - The validation result
  */
 export function validateContactFields(values: { subject?: string; name?: string; email?: string; message?: string }) {
   const missing: string[] = [];
-  if (!values.subject) missing.push('件名');
   if (!values.name) missing.push('お名前');
   if (!values.email) missing.push('メールアドレス');
+  if (!values.subject) missing.push('件名');
   if (!values.message) missing.push('お問い合わせ内容');
 
   const emailRe = /^(?:[a-zA-Z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-zA-Z0-9!#$%&'*+/=?^_`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?\.)+[a-zA-Z]{2,}|(?:\d{1,3}\.){3}\d{1,3})(?::\d+)?$/;
@@ -155,7 +155,13 @@ export function validateContactFields(values: { subject?: string; name?: string;
     ? `${missing.join('、')}を入力してください。${emailInvalid ? 'また、メールアドレスの形式が正しくありません。' : ''}`
     : (emailInvalid ? 'メールアドレスの形式が正しくありません。' : '');
 
-  const firstInvalid = (!values.subject ? 'subject' : !values.name ? 'name' : !values.email ? 'email' : !values.message ? 'message' : (emailInvalid ? 'email' : 'subject')) as 'subject' | 'name' | 'email' | 'message';
+  const firstInvalid = (
+    !values.name ? 'name' : 
+    !values.email ? 'email' : 
+    !values.subject ? 'subject' : 
+    !values.message ? 'message' : 
+    (emailInvalid ? 'email' : 'subject')
+  ) as 'name' | 'email' | 'subject' | 'message';
 
   return { missing, emailInvalid, combined, firstInvalid };
 }
@@ -201,16 +207,18 @@ export function showPreviewModal(html: string) {
   })();
 
   dialog.append(closeBtn, content); root.appendChild(dialog);
-
   const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape') { cleanup(); } };
-  const cleanup = () => {
+  const cleanup = (e?: Event) => {
     try { document.removeEventListener('keydown', onKey); } catch (_) {}
     try { closeBtn.removeEventListener('click', cleanup); } catch (_) {}
-    try { root.removeEventListener('click', cleanup as any); } catch (_) {}
+    try { root.removeEventListener('click', cleanup); } catch (_) {}
     try { root.remove(); } catch (_) {}
   };
   closeBtn.addEventListener('click', cleanup);
-  root.addEventListener('click', (e) => { if (e.target === root) cleanup(); });
+  root.addEventListener('click', (e) => {
+    e.stopPropagation();
+    if (e.target === root) cleanup();
+  });
   document.addEventListener('keydown', onKey);
 
   document.body.appendChild(root);
